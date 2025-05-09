@@ -1,20 +1,228 @@
-# 📝 WAD - Web Application Document
+# Web Application Document - Projeto Individual - Módulo 2 - Inteli
 
-## 📌 Introdução
+## Nome do Projeto
 
-Este documento descreve os aspectos técnicos e estruturais da aplicação **Plataforma de Eventos**, um sistema web que permite a criação, divulgação e gerenciamento de eventos, além de possibilitar a inscrição e compra de ingressos por parte dos usuários.
+**KING TAG**
 
-O sistema possui dois tipos principais de usuários: **organizadores**, que podem cadastrar e gerenciar eventos, e **participantes**, que visualizam eventos disponíveis e realizam inscrições.
+#### Autor do projeto
 
-Entre os principais objetivos do sistema, destacam-se:
+**Leonardo Lameda**
 
-- Facilitar a criação e gestão de eventos de forma prática;
-- Oferecer uma interface intuitiva para compra de ingressos;
-- Fornecer um painel administrativo para controle de inscrições e participantes;
-- Assegurar a integridade dos dados com autenticação e controle de acesso.
+## Sumário
+
+1. [Introdução](#c1)
+2. [Visão Geral da Aplicação Web](#c2)
+3. [Projeto Técnico da Aplicação Web](#c3)
+4. [Desenvolvimento da Aplicação Web](#c4)
+5. [Referências](#c5)
+
+<br>
+
+# Plataforma de Eventos
+
+## <a name="c1"></a>1. Introdução (Semana 01)
+
+A **Plataforma de Eventos** é um sistema web desenvolvido para facilitar a criação, divulgação e gerenciamento de eventos. O sistema permite que organizadores cadastrem seus eventos, gerenciem inscrições e vendam ingressos de forma intuitiva. Os participantes podem visualizar eventos disponíveis, realizar inscrições e adquirir ingressos de maneira prática e segura.
+
+O principal objetivo da aplicação é proporcionar uma experiência eficiente e acessível tanto para organizadores quanto para participantes, garantindo uma interface amigável, um sistema de controle de acesso seguro e funcionalidades voltadas para uma gestão completa de eventos.
 
 ---
 
-## 🗃️ Diagrama do Banco de Dados
+## <a name="c2"></a>2. Visão Geral da Aplicação Web
+
+### 2.1. Personas (Semana 01 - opcional)
+
+#### **Organizador de Eventos**
+
+- **Nome:** Lucas Ferreira
+- **Idade:** 35 anos
+- **Profissão:** Empresário do ramo de eventos
+- **Objetivo:** Criar e gerenciar eventos de forma prática, monitorando inscrições e vendas de ingressos.
+- **Frustração:** Dificuldade em acompanhar as inscrições e divulgar seus eventos para o público certo.
+
+#### **Participante de Eventos**
+
+- **Nome:** Mariana Souza
+- **Idade:** 28 anos
+- **Profissão:** Designer
+- **Objetivo:** Encontrar e participar de eventos relevantes, comprando ingressos de maneira segura e fácil.
+- **Frustração:** Processos complexos e falta de informações claras sobre eventos disponíveis.
+
+---
+
+### 2.2. User Stories (Semana 01 - opcional)
+
+#### **US01 - Cadastro de Eventos**
+
+Como **organizador**, quero **cadastrar um novo evento**, para que **ele seja divulgado na plataforma**.
+
+#### **US02 - Compra de Ingressos**
+
+Como **participante**, quero **comprar ingressos de eventos de forma segura**, para que **possa garantir minha presença**.
+
+#### **US03 - Painel Administrativo**
+
+Como **organizador**, quero **visualizar um painel administrativo com estatísticas de inscrição e vendas**, para que **eu possa acompanhar o desempenho do meu evento**.
+
+#### **Explicação do INVEST da US01**
+
+- **Independente:** O cadastro de eventos pode ser desenvolvido sem dependências diretas com outros módulos.
+- **Negociável:** O organizador pode definir diferentes categorias e tipos de eventos.
+- **Valioso:** Permite a divulgação e alcance de público interessado.
+- **Estimável:** É possível definir estimativas de desenvolvimento para essa funcionalidade.
+- **Small:** O escopo da funcionalidade é claro e objetivo.
+- **Testável:** Pode-se testar se o evento foi cadastrado corretamente e está visível para participantes.
+
+---
+
+## <a name="c3"></a>3. Projeto da Aplicação Web
+
+### 3.1. Modelagem do banco de dados (Semana 3)
 
 ![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1746651024/Untitled_asbd4q.png)
+
+# Modelo Físico do Banco de Dados
+
+O modelo físico da aplicação está implementado no arquivo `init.sql`, que contém os comandos de criação das tabelas e relacionamentos do sistema.
+
+As principais entidades do banco de dados são:
+
+- **usuarios**: informações básicas dos usuários (participantes e organizadores);
+- **organizadores**: associação entre usuários e entidades organizadoras;
+- **eventos**: eventos cadastrados por organizadores;
+- **ingressos**: registros de inscrições e compra de ingressos;
+- **pagamentos**: informações de pagamento relacionadas aos ingressos;
+- **relatorio_vendas_evento**: dados analíticos por compra;
+- **resumo_vendas**: visão geral de vendas por evento.
+
+## Modelo Fisico (Esta no init.sql)
+
+```sql
+CREATE TABLE if not exists "usuarios" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "nome" VARCHAR(100),
+  "sobrenome" VARCHAR(100),
+  "email" VARCHAR(100) UNIQUE NOT NULL,
+  "senha" VARCHAR(255) NOT NULL,
+  "cpf" VARCHAR(14) UNIQUE,
+  "data_nascimento" DATE,
+  "genero" VARCHAR(20),
+  "criado_em" TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE if not exists "organizadores" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "nome_entidade" VARCHAR(100),
+  "usuario_id" INT REFERENCES "usuarios" ("id")
+);
+
+CREATE TABLE if not exists "eventos" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "titulo" VARCHAR(100) NOT NULL,
+  "descricao" TEXT,
+  "data" TIMESTAMP,
+  "local" VARCHAR(255),
+  "imagem_capa" VARCHAR(255),
+  "organizador_id" INT REFERENCES "organizadores" ("id"),
+  "criado_em" TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE if not exists "ingressos" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "evento_id" INT REFERENCES "eventos" ("id"),
+  "usuario_id" INT REFERENCES "usuarios" ("id"),
+  "tipo" VARCHAR(50),
+  "preco_pago" DECIMAL(10,2),
+  "status" VARCHAR(20) DEFAULT 'pendente',
+  "data_compra" TIMESTAMP DEFAULT now(),
+  "codigo_ticket" VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE if not exists "pagamentos" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "ingresso_id" INT REFERENCES "ingressos" ("id"),
+  "valor" DECIMAL(10,2),
+  "forma_pagamento" VARCHAR(30),
+  "status" VARCHAR(20) DEFAULT 'pendente',
+  "data_pagamento" TIMESTAMP
+);
+
+CREATE TABLE if not exists "relatorio_vendas_evento" (
+  "id" INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  "evento_id" INT REFERENCES "eventos" ("id"),
+  "nome_comprador" VARCHAR(100),
+  "idade_comprador" INT,
+  "valor_pago" DECIMAL(10,2),
+  "data_compra" TIMESTAMP
+);
+
+CREATE TABLE if not exists "resumo_vendas" (
+  "evento_id" INT PRIMARY KEY REFERENCES "eventos" ("id"),
+  "total_ingressos_vendidos" INT,
+  "total_arrecadado" DECIMAL(10,2),
+  "atualizado_em" TIMESTAMP DEFAULT now()
+);
+
+```
+
+### 3.1.1 BD e Models (Semana 5)
+
+_Descreva aqui os Models implementados no sistema web_
+
+### 3.2. Arquitetura (Semana 5)
+
+_Posicione aqui o diagrama de arquitetura da sua solução de aplicação web. Atualize sempre que necessário._
+
+**Instruções para criação do diagrama de arquitetura**
+
+- **Model**: A camada que lida com a lógica de negócios e interage com o banco de dados.
+- **View**: A camada responsável pela interface de usuário.
+- **Controller**: A camada que recebe as requisições, processa as ações e atualiza o modelo e a visualização.
+
+_Adicione as setas e explicações sobre como os dados fluem entre o Model, Controller e View._
+
+### 3.3. Wireframes (Semana 03 - opcional)
+
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1746826632/ChatGPT_Image_9_de_mai._de_2025_18_35_30_gt7tqp.png)
+
+### 3.4. Guia de estilos (Semana 05 - opcional)
+
+_Descreva aqui orientações gerais para o leitor sobre como utilizar os componentes do guia de estilos de sua solução._
+
+### 3.5. Protótipo de alta fidelidade (Semana 05 - opcional)
+
+_Posicione aqui algumas imagens demonstrativas de seu protótipo de alta fidelidade e o link para acesso ao protótipo completo (mantenha o link sempre público para visualização)._
+
+### 3.6. WebAPI e endpoints (Semana 05)
+
+_Utilize um link para outra página de documentação contendo a descrição completa de cada endpoint. Ou descreva aqui cada endpoint criado para seu sistema._
+
+### 3.7 Interface e Navegação (Semana 07)
+
+_Descreva e ilustre aqui o desenvolvimento do frontend do sistema web, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar._
+
+---
+
+## <a name="c4"></a>4. Desenvolvimento da Aplicação Web (Semana 8)
+
+### 4.1 Demonstração do Sistema Web (Semana 8)
+
+_VIDEO: Insira o link do vídeo demonstrativo nesta seção_
+_Descreva e ilustre aqui o desenvolvimento do sistema web completo, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar._
+
+### 4.2 Conclusões e Trabalhos Futuros (Semana 8)
+
+_Indique pontos fortes e pontos a melhorar de maneira geral._
+_Relacione também quaisquer outras ideias que você tenha para melhorias futuras._
+
+## <a name="c5"></a>5. Referências
+
+_Incluir as principais referências de seu projeto, para que o leitor possa consultar caso ele se interessar em aprofundar._<br>
+
+---
+
+---
+
+```
+
+```
