@@ -21,7 +21,7 @@ O projeto segue a arquitetura **MVC (Model-View-Controller)**, garantindo uma or
 
 ## Diretórios principais
 
-- **assets/** - Contém arquivos estáticos, como imagens, estilos CSS e scripts JavaScript.
+- **assets/** - Contém arquivos estáticos, como imagens.
 - **config/** - Arquivos de configuração necessários para o funcionamento da aplicação.
 - **controllers/** - Define a lógica de negócio e interage com os modelos para responder às requisições dos usuários.
 - **documentos/** - Diretório para armazenar documentação do projeto.
@@ -31,11 +31,10 @@ O projeto segue a arquitetura **MVC (Model-View-Controller)**, garantindo uma or
 - **scripts/** - Armazena scripts auxiliares e automações.
 - **services/** - Implementa regras de negócio e funcionalidades independentes dos controladores.
 - **tests/** - Contém arquivos de teste para validar a integridade do sistema.
-- **views/** - Responsável pela camada de apresentação, geralmente contendo arquivos HTML, EJS ou outra tecnologia de template.
+- **views/** - Responsável pela camada de apresentação, geralmente contendo arquivos HTML, EJS e CSS.
 
 ## Arquivos essenciais na raiz
 
-- `.env` - Define variáveis de ambiente sensíveis.
 - `.env.example` - Exemplo de arquivo `.env`, para referência.
 - `.gitignore` - Define arquivos e diretórios que devem ser ignorados pelo Git.
 - `LICENSE` - Informação sobre a licença do projeto.
@@ -46,9 +45,7 @@ O projeto segue a arquitetura **MVC (Model-View-Controller)**, garantindo uma or
 
 ---
 
-Se precisar de ajustes ou quiser adicionar mais detalhes, me avise! 🚀
-
-## ✨ Como executar o projeto localmente
+# ✨ Como executar o projeto localmente
 
 1- _Clone o repositório_:
 
@@ -93,7 +90,7 @@ npm start
 http://localhost:3000
 ```
 
-7- _Testes (opcional): Caso queira rodar testes execute:_
+7- _Testes (opcional): Caso queira rodar testes, execute:_
 
 ```bash
 npm test
