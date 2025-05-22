@@ -170,15 +170,7 @@ Realiza o controle dos usuários da aplicação. Suporta as seguintes operaçõe
 
 ### 3.2. Arquitetura (Semana 5)
 
-_Posicione aqui o diagrama de arquitetura da sua solução de aplicação web. Atualize sempre que necessário._
-
-**Instruções para criação do diagrama de arquitetura**
-
-- **Model**: A camada que lida com a lógica de negócios e interage com o banco de dados.
-- **View**: A camada responsável pela interface de usuário.
-- **Controller**: A camada que recebe as requisições, processa as ações e atualiza o modelo e a visualização.
-
-_Adicione as setas e explicações sobre como os dados fluem entre o Model, Controller e View._
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1747952444/Editor___Mermaid_Chart-2025-05-22-221929_iulbmc.png)
 
 ### 3.3. Wireframes (Semana 03 - opcional)
 
@@ -192,7 +184,7 @@ _Posicione aqui algumas imagens demonstrativas de seu protótipo de alta fidelid
 
 ### 3.6. WebAPI e endpoints (Semana 05)
 
-_Utilize um link para outra página de documentação contendo a descrição completa de cada endpoint. Ou descreva aqui cada endpoint criado para seu sistema._
+<a href="wad2.md">Abrir especificações endpoints</a>
 
 ### 3.7 Interface e Navegação (Semana 07)
 
