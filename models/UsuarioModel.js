@@ -1,38 +1,98 @@
 // models/UsuarioModel.js
-const pool = require("../config/db");
+const UsuarioRepository = require("../repositories/UsuarioRepository");
 
 const UsuarioModel = {
   async listarUsuarios() {
-    const result = await pool.query("SELECT id, nome, email FROM usuarios");
-    return result.rows;
+    try {
+      return await UsuarioRepository.findAll();
+    } catch (error) {
+      throw new Error(`Erro ao listar usuários: ${error.message}`);
+    }
   },
 
   async criarUsuario(nome, email, senha) {
-    const result = await pool.query(
-      "INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING id, nome, email",
-      [nome, email, senha]
-    );
-    return result.rows[0];
+    try {
+      // Verificar se o email já existe
+      const usuarioExistente = await UsuarioRepository.findByEmail(email);
+      if (usuarioExistente) {
+        throw new Error("Email já está em uso");
+      }
+
+      return await UsuarioRepository.create(nome, email, senha);
+    } catch (error) {
+      throw new Error(`Erro ao criar usuário: ${error.message}`);
+    }
   },
 
   async buscarUsuarioPorId(id) {
-    const result = await pool.query(
-      "SELECT id, nome, email FROM usuarios WHERE id = $1",
-      [id]
-    );
-    return result.rows[0]; // ou undefined se não encontrar
+    try {
+      if (!id || isNaN(id)) {
+        throw new Error("ID inválido");
+      }
+
+      return await UsuarioRepository.findById(id);
+    } catch (error) {
+      throw new Error(`Erro ao buscar usuário: ${error.message}`);
+    }
   },
 
   async editarUsuario(id, nome, email) {
-    const result = await pool.query(
-      "UPDATE usuarios SET nome = $1, email = $2 WHERE id = $3 RETURNING id, nome, email",
-      [nome, email, id]
-    );
-    return result.rows[0];
+    try {
+      if (!id || isNaN(id)) {
+        throw new Error("ID inválido");
+      }
+
+      // Verificar se o usuário existe
+      const usuarioExiste = await UsuarioRepository.exists(id);
+      if (!usuarioExiste) {
+        return null;
+      }
+
+      // Verificar se o email já está sendo usado por outro usuário
+      const usuarioComEmail = await UsuarioRepository.findByEmail(email);
+      if (usuarioComEmail && usuarioComEmail.id != id) {
+        throw new Error("Email já está em uso por outro usuário");
+      }
+
+      return await UsuarioRepository.update(id, nome, email);
+    } catch (error) {
+      throw new Error(`Erro ao editar usuário: ${error.message}`);
+    }
   },
 
   async deletarUsuario(id) {
-    await pool.query("DELETE FROM usuarios WHERE id = $1", [id]);
+    try {
+      if (!id || isNaN(id)) {
+        throw new Error("ID inválido");
+      }
+
+      // Verificar se o usuário existe
+      const usuarioExiste = await UsuarioRepository.exists(id);
+      if (!usuarioExiste) {
+        throw new Error("Usuário não encontrado");
+      }
+
+      const deletado = await UsuarioRepository.delete(id);
+      if (!deletado) {
+        throw new Error("Falha ao deletar usuário");
+      }
+
+      return true;
+    } catch (error) {
+      throw new Error(`Erro ao deletar usuário: ${error.message}`);
+    }
+  },
+
+  async buscarUsuarioPorEmail(email) {
+    try {
+      if (!email) {
+        throw new Error("Email é obrigatório");
+      }
+
+      return await UsuarioRepository.findByEmail(email);
+    } catch (error) {
+      throw new Error(`Erro ao buscar usuário por email: ${error.message}`);
+    }
   },
 };
 
