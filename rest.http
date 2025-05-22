@@ -5,7 +5,7 @@ POST http://localhost:3000/api/usuarios
 Content-Type: application/json
 
 {
-  "nome": "Leonardo",
+  "nome": "rafa",
   "email": "leo@email.com",
   "senha": "123456"
 }
@@ -113,22 +113,24 @@ Accept: application/json
 ###
 
 ### Buscar inscrição por ID
-GET http://localhost:3000/api/inscricoes/1
+GET http://localhost:3000/api/inscricoes/8
 Accept: application/json
 
 ###
 
 ### Editar inscrição
-PUT http://localhost:3000/api/inscricoes/1
+PUT http://localhost:3000/api/inscricoes/8
 Content-Type: application/json
 
 {
-  "usuario_id": 1,
-  "evento_id": 1
+  "usuario_id": 6,
+  "evento_id": 21,
+  "nome_participante": "Doutor Silva",
+  "idade_participante": 33
 }
 
 ###
 
 ### Deletar inscrição
-DELETE http://localhost:3000/api/inscricoes/1
+DELETE http://localhost:3000/api/inscricoes/8
 Accept: application/json

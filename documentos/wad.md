@@ -127,7 +127,46 @@ CREATE TABLE IF NOT EXISTS inscricoes (
 
 ### 3.1.1 BD e Models (Semana 5)
 
-_Descreva aqui os Models implementados no sistema web_
+# Models Implementados no Sistema Web
+
+O sistema possui três _models_ principais, responsáveis por realizar a comunicação com o banco de dados PostgreSQL por meio de queries SQL utilizando o módulo `pg`. Os _models_ seguem uma arquitetura de acesso a dados, centralizando as operações CRUD de cada entidade.
+
+---
+
+## 1. EventoModel
+
+Responsável pelo gerenciamento de eventos cadastrados na plataforma. As principais funções implementadas incluem:
+
+- `listarEventos()` – Retorna todos os eventos registrados no banco.
+- `criarEvento(titulo, descricao, imagem_url, criador_id)` – Insere um novo evento com os dados informados.
+- `buscarEventoPorId(id)` – Retorna um evento específico com base no seu ID.
+- `editarEvento(id, titulo, descricao, imagem_url)` – Atualiza as informações de um evento.
+- `deletarEvento(id)` – Remove um evento do banco de dados.
+- `buscarInscricoesDoEvento(id)` – Retorna os dados dos participantes inscritos em um determinado evento.
+
+---
+
+## 2. InscricaoModel
+
+Gerencia as inscrições de usuários nos eventos. Suas funcionalidades principais são:
+
+- `listarInscricoes()` – Lista todas as inscrições feitas.
+- `criarInscricao(evento_id, usuario_id, nome_participante, idade_participante)` – Cadastra uma nova inscrição.
+- `buscarInscricaoPorId(id)` – Retorna os dados de uma inscrição específica.
+- `editarInscricao(id, nome_participante, idade_participante)` – Permite a edição dos dados do participante inscrito.
+- `deletarInscricao(id)` – Exclui uma inscrição do banco.
+
+---
+
+## 3. UsuarioModel
+
+Realiza o controle dos usuários da aplicação. Suporta as seguintes operações:
+
+- `listarUsuarios()` – Retorna todos os usuários cadastrados, exceto a senha.
+- `criarUsuario(nome, email, senha)` – Adiciona um novo usuário ao sistema.
+- `buscarUsuarioPorId(id)` – Busca um usuário específico pelo ID.
+- `editarUsuario(id, nome, email)` – Altera nome e email de um usuário.
+- `deletarUsuario(id)` – Remove um usuário do sistema.
 
 ### 3.2. Arquitetura (Semana 5)
 
