@@ -1,27 +1,28 @@
+// server.js
 require("dotenv").config();
 const express = require("express");
-const app = express();
-const db = require("./config/db");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const routes = require("./routes");
 const path = require("path");
+const db = require("./config/db");
 
+const app = express();
+const port = 3000;
+
+// Middlewares
+app.use(cors());
+app.use(bodyParser.json());
+
+// Usando as rotas definidas
+app.use("/api", routes);
+
+console.log("Conectando ao banco de dados...");
 db.connect()
   .then(() => {
-    console.log("Conectado ao banco de dados PostgreSQL");
-
-    app.use(express.json());
-
-    app.get("/", async (req, res) => {
-      try {
-        const result = await db.query("SELECT NOW()");
-        res.send(`Hora atual no banco: ${result.rows[0].now}`);
-      } catch (err) {
-        res.status(500).send("Erro ao conectar com o banco.");
-      }
-    });
-
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`Servidor rodando na porta ${PORT}`);
+    console.log("Conexão com o banco de dados estabelecida.");
+    app.listen(port, () => {
+      console.log(`Servidor rodando na porta ${port}`);
     });
   })
   .catch((err) => {
