@@ -86,7 +86,7 @@ DELETE http://localhost:3000/api/eventos/1
 ###
 
 # Obter dashboard do evento
-GET http://localhost:3000/api/eventos/1/dashboard
+GET http://localhost:3000/api/eventos/24/dashboard
 Accept: application/json
 
 ###
@@ -98,7 +98,7 @@ Content-Type: application/json
 
 {
   "usuario_id": 6,
-  "evento_id": 21,
+  "evento_id": 24,
   "nome_participante": "Fulano da Silva",
   "idade_participante": 22
 }
@@ -124,7 +124,7 @@ Content-Type: application/json
 
 {
   "usuario_id": 6,
-  "evento_id": 21,
+  "evento_id": 24,
   "nome_participante": "Doutor Silva",
   "idade_participante": 33
 }
