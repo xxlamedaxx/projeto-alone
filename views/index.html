@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Gerenciamento de Eventos</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <div class="logo">EventoApp</div>
+          <ul class="nav-links">
+            <li>
+              <a href="#" class="nav-link active" data-section="eventos"
+                >Eventos</a
+              >
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-section="usuarios">Usuários</a>
+            </li>
+            <li>
+              <a href="#" class="nav-link" data-section="inscricoes"
+                >Inscrições</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <div class="container">
+        <!-- Mensagens de alerta -->
+        <div id="alertContainer"></div>
+
+        <!-- Seção de Eventos -->
+        <section id="eventos-section" class="section">
+          <div class="flex justify-between align-center mb-3">
+            <h2 class="section-title">Gerenciamento de Eventos</h2>
+            <button id="btn-novo-evento" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Novo Evento
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="tabs">
+                <div class="tab active" data-tab="lista-eventos">
+                  Lista de Eventos
+                </div>
+                <div class="tab" data-tab="dashboard-eventos">Dashboard</div>
+              </div>
+
+              <div id="lista-eventos" class="tab-content active">
+                <div class="loading-container" id="eventos-loading">
+                  <div class="loader"></div>
+                </div>
+                <div class="eventos-grid" id="eventos-container"></div>
+              </div>
+
+              <div id="dashboard-eventos" class="tab-content">
+                <div class="dashboard-container">
+                  <div class="form-group mb-3">
+                    <label for="evento-dashboard-select"
+                      >Selecione um evento:</label
+                    >
+                    <select id="evento-dashboard-select" class="form-control">
+                      <option value="">Selecione um evento</option>
+                    </select>
+                  </div>
+
+                  <div id="dashboard-content" class="hidden">
+                    <div class="dashboard-stats">
+                      <div class="stat-card">
+                        <h3 id="total-inscricoes">0</h3>
+                        <p>Total de Inscrições</p>
+                      </div>
+                      <div class="stat-card">
+                        <h3 id="media-idade">0</h3>
+                        <p>Média de Idade</p>
+                      </div>
+                    </div>
+
+                    <div class="card">
+                      <div class="card-header">
+                        <h3>Lista de Participantes</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-container">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Nome</th>
+                                <th>Idade</th>
+                                <th>Usuário</th>
+                              </tr>
+                            </thead>
+                            <tbody id="participantes-table-body"></tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Seção de Usuários -->
+        <section id="usuarios-section" class="section hidden">
+          <div class="flex justify-between align-center mb-3">
+            <h2 class="section-title">Gerenciamento de Usuários</h2>
+            <button id="btn-novo-usuario" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Novo Usuário
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="loading-container" id="usuarios-loading">
+                <div class="loader"></div>
+              </div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nome</th>
+                      <th>Email</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="usuarios-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Seção de Inscrições -->
+        <section id="inscricoes-section" class="section hidden">
+          <div class="flex justify-between align-center mb-3">
+            <h2 class="section-title">Gerenciamento de Inscrições</h2>
+            <button id="btn-nova-inscricao" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Nova Inscrição
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="loading-container" id="inscricoes-loading">
+                <div class="loader"></div>
+              </div>
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Evento</th>
+                      <th>Participante</th>
+                      <th>Idade</th>
+                      <th>Usuário</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inscricoes-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Modal de Usuário -->
+    <div class="modal-backdrop" id="usuario-modal-backdrop">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="usuario-modal-title">Novo Usuário</h3>
+          <button class="modal-close" id="usuario-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="usuario-form">
+            <input type="hidden" id="usuario-id" />
+            <div class="form-group">
+              <label for="usuario-nome">Nome:</label>
+              <input type="text" id="usuario-nome" required />
+            </div>
+            <div class="form-group">
+              <label for="usuario-email">Email:</label>
+              <input type="email" id="usuario-email" required />
+            </div>
+            <div class="form-group" id="senha-group">
+              <label for="usuario-senha">Senha:</label>
+              <input type="password" id="usuario-senha" required />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="usuario-cancel-btn">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" id="usuario-save-btn">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Evento -->
+    <div class="modal-backdrop" id="evento-modal-backdrop">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="evento-modal-title">Novo Evento</h3>
+          <button class="modal-close" id="evento-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="evento-form">
+            <input type="hidden" id="evento-id" />
+            <div class="form-group">
+              <label for="evento-titulo">Título:</label>
+              <input type="text" id="evento-titulo" required />
+            </div>
+            <div class="form-group">
+              <label for="evento-descricao">Descrição:</label>
+              <textarea id="evento-descricao" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="evento-imagem">URL da Imagem:</label>
+              <input type="url" id="evento-imagem" required />
+            </div>
+            <div class="form-group">
+              <label for="evento-criador">Criador:</label>
+              <select id="evento-criador" required>
+                <option value="">Selecione um usuário</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="evento-cancel-btn">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" id="evento-save-btn">Salvar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Inscrição -->
+    <div class="modal-backdrop" id="inscricao-modal-backdrop">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title" id="inscricao-modal-title">Nova Inscrição</h3>
+          <button class="modal-close" id="inscricao-modal-close">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="inscricao-form">
+            <input type="hidden" id="inscricao-id" />
+            <div class="form-group">
+              <label for="inscricao-usuario">Usuário:</label>
+              <select id="inscricao-usuario" required>
+                <option value="">Selecione um usuário</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="inscricao-evento">Evento:</label>
+              <select id="inscricao-evento" required>
+                <option value="">Selecione um evento</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="inscricao-nome">Nome do Participante:</label>
+              <input type="text" id="inscricao-nome" required />
+            </div>
+            <div class="form-group">
+              <label for="inscricao-idade">Idade do Participante:</label>
+              <input
+                type="number"
+                id="inscricao-idade"
+                min="1"
+                max="120"
+                required
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="inscricao-cancel-btn">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" id="inscricao-save-btn">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal-backdrop" id="confirm-modal-backdrop">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Confirmação</h3>
+          <button class="modal-close" id="confirm-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p id="confirm-message">Tem certeza que deseja excluir este item?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="confirm-cancel-btn">
+            Cancelar
+          </button>
+          <button class="btn btn-danger" id="confirm-ok-btn">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/usuarios.js"></script>
+    <script src="js/eventos.js"></script>
+    <script src="js/inscricoes.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
