@@ -1,10 +1,13 @@
 // models/InscricaoModel.js
-const pool = require("../config/db");
+const InscricaoRepository = require("../repositories/InscricaoRepository");
 
 const InscricaoModel = {
   async listarInscricoes() {
-    const result = await pool.query("SELECT * FROM inscricoes");
-    return result.rows;
+    try {
+      return await InscricaoRepository.findAll();
+    } catch (error) {
+      throw new Error(`Erro ao listar inscrições: ${error.message}`);
+    }
   },
 
   async criarInscricao(
@@ -13,30 +16,136 @@ const InscricaoModel = {
     nome_participante,
     idade_participante
   ) {
-    const result = await pool.query(
-      "INSERT INTO inscricoes (evento_id, usuario_id, nome_participante, idade_participante) VALUES ($1, $2, $3, $4) RETURNING *",
-      [evento_id, usuario_id, nome_participante, idade_participante]
-    );
-    return result.rows[0];
+    try {
+      // Validações básicas
+      if (!evento_id || isNaN(evento_id)) {
+        throw new Error("ID do evento inválido");
+      }
+      if (!usuario_id || isNaN(usuario_id)) {
+        throw new Error("ID do usuário inválido");
+      }
+      if (!nome_participante || nome_participante.trim() === "") {
+        throw new Error("Nome do participante é obrigatório");
+      }
+      if (
+        !idade_participante ||
+        isNaN(idade_participante) ||
+        idade_participante <= 0
+      ) {
+        throw new Error(
+          "Idade do participante deve ser um número válido e maior que zero"
+        );
+      }
+
+      // Verificar se já existe inscrição do usuário para o evento
+      const inscricaoExistente =
+        await InscricaoRepository.findByEventoAndUsuario(evento_id, usuario_id);
+      if (inscricaoExistente) {
+        throw new Error("Usuário já está inscrito neste evento");
+      }
+
+      return await InscricaoRepository.create(
+        evento_id,
+        usuario_id,
+        nome_participante,
+        idade_participante
+      );
+    } catch (error) {
+      throw new Error(`Erro ao criar inscrição: ${error.message}`);
+    }
   },
 
   async buscarInscricaoPorId(id) {
-    const result = await pool.query("SELECT * FROM inscricoes WHERE id = $1", [
-      id,
-    ]);
-    return result.rows[0]; // retorna undefined se não achar
+    try {
+      if (!id || isNaN(id)) {
+        throw new Error("ID inválido");
+      }
+
+      return await InscricaoRepository.findById(id);
+    } catch (error) {
+      throw new Error(`Erro ao buscar inscrição: ${error.message}`);
+    }
   },
 
   async editarInscricao(id, nome_participante, idade_participante) {
-    const result = await pool.query(
-      "UPDATE inscricoes SET nome_participante = $1, idade_participante = $2 WHERE id = $3 RETURNING *",
-      [nome_participante, idade_participante, id]
-    );
-    return result.rows[0];
+    try {
+      if (!id || isNaN(id)) {
+        throw new Error("ID inválido");
+      }
+      if (!nome_participante || nome_participante.trim() === "") {
+        throw new Error("Nome do participante é obrigatório");
+      }
+      if (
+        !idade_participante ||
+        isNaN(idade_participante) ||
+        idade_participante <= 0
+      ) {
+        throw new Error(
+          "Idade do participante deve ser um número válido e maior que zero"
+        );
+      }
+
+      // Verificar se a inscrição existe
+      const inscricaoExiste = await InscricaoRepository.exists(id);
+      if (!inscricaoExiste) {
+        return null;
+      }
+
+      return await InscricaoRepository.update(
+        id,
+        nome_participante,
+        idade_participante
+      );
+    } catch (error) {
+      throw new Error(`Erro ao editar inscrição: ${error.message}`);
+    }
   },
 
   async deletarInscricao(id) {
-    await pool.query("DELETE FROM inscricoes WHERE id = $1", [id]);
+    try {
+      if (!id || isNaN(id)) {
+        throw new Error("ID inválido");
+      }
+
+      // Verificar se a inscrição existe
+      const inscricaoExiste = await InscricaoRepository.exists(id);
+      if (!inscricaoExiste) {
+        throw new Error("Inscrição não encontrada");
+      }
+
+      const deletado = await InscricaoRepository.delete(id);
+      if (!deletado) {
+        throw new Error("Falha ao deletar inscrição");
+      }
+
+      return true;
+    } catch (error) {
+      throw new Error(`Erro ao deletar inscrição: ${error.message}`);
+    }
+  },
+
+  async buscarInscricoesPorUsuario(usuario_id) {
+    try {
+      if (!usuario_id || isNaN(usuario_id)) {
+        throw new Error("ID do usuário inválido");
+      }
+
+      return await InscricaoRepository.findByUsuario(usuario_id);
+    } catch (error) {
+      throw new Error(`Erro ao buscar inscrições do usuário: ${error.message}`);
+    }
+  },
+
+  async buscarInscricoesPorEvento(evento_id) {
+    try {
+      if (!evento_id || isNaN(evento_id)) {
+        throw new Error("ID do evento inválido");
+      }
+
+      return await InscricaoRepository.findByEvento(evento_id);
+    } catch (error) {
+      throw new Error(`Erro ao buscar inscrições do evento: ${error.message}`);
+    }
   },
 };
 

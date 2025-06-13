@@ -1,170 +1,73 @@
-// models/InscricaoModel.js
-const InscricaoRepository = require("../repositories/InscricaoRepository");
-const EventoRepository = require("../repositories/EventoRepository");
-const UsuarioRepository = require("../repositories/UsuarioRepository");
+// repositories/InscricaoRepository.js
+const pool = require("../config/db");
 
-const InscricaoModel = {
-  async listarInscricoes() {
-    try {
-      return await InscricaoRepository.findAll();
-    } catch (error) {
-      throw new Error(`Erro ao listar inscrições: ${error.message}`);
-    }
+const InscricaoRepository = {
+  async findAll() {
+    const result = await pool.query("SELECT * FROM inscricoes");
+    return result.rows;
   },
 
-  async criarInscricao(
-    evento_id,
-    usuario_id,
-    nome_participante,
-    idade_participante
-  ) {
-    try {
-      if (!evento_id || !usuario_id || !nome_participante) {
-        throw new Error(
-          "Evento, usuário e nome do participante são obrigatórios"
-        );
-      }
-
-      // Verificar se o evento existe
-      const eventoExiste = await EventoRepository.exists(evento_id);
-      if (!eventoExiste) {
-        throw new Error("Evento não encontrado");
-      }
-
-      // Verificar se o usuário existe
-      const usuarioExiste = await UsuarioRepository.exists(usuario_id);
-      if (!usuarioExiste) {
-        throw new Error("Usuário não encontrado");
-      }
-
-      // Verificar se já existe inscrição para este usuário neste evento
-      const inscricaoExistente =
-        await InscricaoRepository.checkExistingInscricao(evento_id, usuario_id);
-      if (inscricaoExistente) {
-        throw new Error("Usuário já está inscrito neste evento");
-      }
-
-      return await InscricaoRepository.create(
-        evento_id,
-        usuario_id,
-        nome_participante,
-        idade_participante
-      );
-    } catch (error) {
-      throw new Error(`Erro ao criar inscrição: ${error.message}`);
-    }
+  async create(evento_id, usuario_id, nome_participante, idade_participante) {
+    const result = await pool.query(
+      "INSERT INTO inscricoes (evento_id, usuario_id, nome_participante, idade_participante) VALUES ($1, $2, $3, $4) RETURNING *",
+      [evento_id, usuario_id, nome_participante, idade_participante]
+    );
+    return result.rows[0];
   },
 
-  async buscarInscricaoPorId(id) {
-    try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
-      }
-
-      return await InscricaoRepository.findById(id);
-    } catch (error) {
-      throw new Error(`Erro ao buscar inscrição: ${error.message}`);
-    }
+  async findById(id) {
+    const result = await pool.query("SELECT * FROM inscricoes WHERE id = $1", [
+      id,
+    ]);
+    return result.rows[0];
   },
 
-  async editarInscricao(id, nome_participante, idade_participante) {
-    try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
-      }
-
-      if (!nome_participante) {
-        throw new Error("Nome do participante é obrigatório");
-      }
-
-      // Verificar se a inscrição existe
-      const inscricaoExiste = await InscricaoRepository.exists(id);
-      if (!inscricaoExiste) {
-        return null;
-      }
-
-      return await InscricaoRepository.update(
-        id,
-        nome_participante,
-        idade_participante
-      );
-    } catch (error) {
-      throw new Error(`Erro ao editar inscrição: ${error.message}`);
-    }
+  async exists(id) {
+    const result = await pool.query(
+      "SELECT EXISTS(SELECT 1 FROM inscricoes WHERE id = $1)",
+      [id]
+    );
+    return result.rows[0].exists;
   },
 
-  async deletarInscricao(id) {
-    try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
-      }
-
-      // Verificar se a inscrição existe
-      const inscricaoExiste = await InscricaoRepository.exists(id);
-      if (!inscricaoExiste) {
-        throw new Error("Inscrição não encontrada");
-      }
-
-      const deletado = await InscricaoRepository.delete(id);
-      if (!deletado) {
-        throw new Error("Falha ao deletar inscrição");
-      }
-
-      return true;
-    } catch (error) {
-      throw new Error(`Erro ao deletar inscrição: ${error.message}`);
-    }
+  async update(id, nome_participante, idade_participante) {
+    const result = await pool.query(
+      "UPDATE inscricoes SET nome_participante = $1, idade_participante = $2 WHERE id = $3 RETURNING *",
+      [nome_participante, idade_participante, id]
+    );
+    return result.rows[0];
   },
 
-  async buscarInscricoesPorEvento(evento_id) {
-    try {
-      if (!evento_id || isNaN(evento_id)) {
-        throw new Error("ID do evento inválido");
-      }
-
-      // Verificar se o evento existe
-      const eventoExiste = await EventoRepository.exists(evento_id);
-      if (!eventoExiste) {
-        throw new Error("Evento não encontrado");
-      }
-
-      return await InscricaoRepository.findByEventoId(evento_id);
-    } catch (error) {
-      throw new Error(`Erro ao buscar inscrições por evento: ${error.message}`);
-    }
+  async delete(id) {
+    const result = await pool.query("DELETE FROM inscricoes WHERE id = $1", [
+      id,
+    ]);
+    return result.rowCount > 0;
   },
 
-  async buscarInscricoesPorUsuario(usuario_id) {
-    try {
-      if (!usuario_id || isNaN(usuario_id)) {
-        throw new Error("ID do usuário inválido");
-      }
-
-      // Verificar se o usuário existe
-      const usuarioExiste = await UsuarioRepository.exists(usuario_id);
-      if (!usuarioExiste) {
-        throw new Error("Usuário não encontrado");
-      }
-
-      return await InscricaoRepository.findByUsuarioId(usuario_id);
-    } catch (error) {
-      throw new Error(
-        `Erro ao buscar inscrições por usuário: ${error.message}`
-      );
-    }
+  async findByUsuario(usuario_id) {
+    const result = await pool.query(
+      "SELECT * FROM inscricoes WHERE usuario_id = $1",
+      [usuario_id]
+    );
+    return result.rows;
   },
 
-  async contarInscricoesPorEvento(evento_id) {
-    try {
-      if (!evento_id || isNaN(evento_id)) {
-        throw new Error("ID do evento inválido");
-      }
+  async findByEvento(evento_id) {
+    const result = await pool.query(
+      "SELECT * FROM inscricoes WHERE evento_id = $1",
+      [evento_id]
+    );
+    return result.rows;
+  },
 
-      return await InscricaoRepository.countByEventoId(evento_id);
-    } catch (error) {
-      throw new Error(`Erro ao contar inscrições: ${error.message}`);
-    }
+  async findByEventoAndUsuario(evento_id, usuario_id) {
+    const result = await pool.query(
+      "SELECT * FROM inscricoes WHERE evento_id = $1 AND usuario_id = $2",
+      [evento_id, usuario_id]
+    );
+    return result.rows[0];
   },
 };
 
-module.exports = InscricaoModel;
+module.exports = InscricaoRepository;
