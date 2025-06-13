@@ -188,7 +188,22 @@ _Posicione aqui algumas imagens demonstrativas de seu protótipo de alta fidelid
 
 ### 3.7 Interface e Navegação (Semana 07)
 
-_Descreva e ilustre aqui o desenvolvimento do frontend do sistema web, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar._
+Foi desenvolvido um **sistema web de gerenciamento de eventos** que permite criar e acompanhar eventos de forma prática e eficiente. Entre as funcionalidades implementadas estão:
+
+- Tela de **criação de novos eventos**, onde é possível inserir todas as informações necessárias;
+- Uma **dashboard** que apresenta dados detalhados sobre cada evento, como número de inscritos, idade média dos participantes e a lista com os nomes das pessoas registradas;
+- Telas específicas para o **cadastro de novos usuários** e para a **inscrição desses usuários** em eventos.
+
+A proposta da aplicação é atender **clientes organizadores de eventos**: ao firmar um contrato, o organizador fornece as informações dos eventos e a lista de participantes, e então toda a estrutura do sistema é montada com base nesses dados. Após a entrega, o cliente recebe acesso à plataforma e consegue acompanhar, de forma centralizada, como estão sendo conduzidos os eventos sob sua responsabilidade.
+
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821157/Captura_inicio_evento_kcjvhz.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749822332/imagem_2025-06-13_104529708_mucb8z.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821156/Captura_dashboard_w4nq5r.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821156/Captura_dash2_i3xgyh.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821157/Captura_usuarios_wrydfw.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821156/Captura_iniusu_tw4nod.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821156/Captura_inscri_j999l6.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821157/Captura_iniinscri_vqfirx.png)
 
 ---
 
@@ -201,8 +216,57 @@ _Descreva e ilustre aqui o desenvolvimento do sistema web completo, explicando b
 
 ### 4.2 Conclusões e Trabalhos Futuros (Semana 8)
 
-_Indique pontos fortes e pontos a melhorar de maneira geral._
-_Relacione também quaisquer outras ideias que você tenha para melhorias futuras._
+## <a name="c6"></a>5. Decisões Técnicas
+
+Nesta seção, detalhamos as principais decisões técnicas que guiaram o desenvolvimento do projeto, abrangendo a escolha de frameworks, bibliotecas e padrões de arquitetura.
+
+- **Arquitetura MVC (Model-View-Controller):** Adoção da arquitetura MVC para promover a separação de responsabilidades, facilitando a organização do código, a manutenção e a escalabilidade do projeto. Os `models` lidam com a lógica de negócios e interação com o banco de dados, as `views` são responsáveis pela apresentação dos dados ao usuário, e os `controllers` gerenciam as requisições e orquestram a interação entre models e views.
+
+- **Node.js e Express.js:** Utilização do Node.js como ambiente de execução e Express.js como framework web. Essa escolha proporciona um ambiente de desenvolvimento JavaScript completo, desde o backend até o frontend (com EJS), permitindo a construção de aplicações web robustas e escaláveis.
+
+- **PostgreSQL como Banco de Dados:** O PostgreSQL foi selecionado devido à sua robustez, confiabilidade e capacidade de lidar com grandes volumes de dados. Sua conformidade com SQL e o suporte a recursos avançados garantem a integridade e a segurança das informações do sistema.
+
+- **Validação de Dados com Joi:** A biblioteca Joi foi integrada para realizar a validação de esquemas de dados nos `models`. Isso garante que os dados recebidos pela aplicação estejam em conformidade com as regras de negócio definidas, prevenindo erros e aumentando a segurança e a confiabilidade do sistema.
+
+- **Testes Unitários com Jest:** A implementação de testes unitários utilizando o Jest assegura a qualidade e a estabilidade do código. Os testes cobrem as funcionalidades dos `models`, garantindo que as validações e operações de banco de dados funcionem conforme o esperado, facilitando a detecção precoce de bugs e a refatoração segura.
+
+---
+
+## <a name="c7"></a>6. Aprendizados e Desafios
+
+O desenvolvimento deste projeto proporcionou diversos aprendizados e desafios, que contribuíram significativamente para o aprimoramento das habilidades técnicas e de resolução de problemas.
+
+- **Aprendizados:**
+
+  - Aprofundamento na arquitetura MVC e sua aplicação prática em projetos Node.js.
+  - Melhor compreensão sobre a importância da validação de dados e como implementá-la de forma eficaz com Joi.
+  - Experiência na escrita de testes unitários robustos com Jest, cobrindo diferentes cenários e garantindo a qualidade do código.
+  - Gerenciamento de dependências e scripts de projeto com npm.
+  - Integração e manipulação de banco de dados PostgreSQL com Node.js.
+
+- **Desafios:**
+  - Configuração inicial do ambiente de desenvolvimento e integração das diferentes tecnologias (Node.js, Express, PostgreSQL, Joi, Jest).
+  - Implementação de validações complexas nos `models` para garantir a integridade dos dados, especialmente em cenários de criação e atualização.
+  - Escrita de testes unitários abrangentes que cobrissem todas as validações e lógicas de negócio, incluindo a simulação de interações com o banco de dados (mocks).
+  - Refatoração de código existente para incorporar as novas validações e testes, garantindo a compatibilidade e minimizando impactos.
+
+---
+
+## <a name="c8"></a>7. Pontos de Melhoria
+
+Durante o desenvolvimento e após a conclusão das funcionalidades principais, foram identificados alguns pontos que poderiam ser aprimorados em futuras iterações do projeto:
+
+- **Autenticação e Autorização:** Implementar um sistema de autenticação e autorização mais robusto, utilizando tokens JWT (JSON Web Tokens) para proteger as rotas da API e controlar o acesso dos usuários com base em seus papéis (organizador, participante).
+
+- **Tratamento de Erros Global:** Centralizar o tratamento de erros na aplicação para fornecer respostas padronizadas e mais informativas aos clientes da API, melhorando a experiência do desenvolvedor e a depuração.
+
+- **Otimização de Queries de Banco de Dados:** Analisar e otimizar as queries SQL para melhorar o desempenho da aplicação, especialmente em cenários com grande volume de dados ou requisições complexas.
+
+- **Interface do Usuário (Frontend):** Aprimorar a interface do usuário com um design mais responsivo e interativo, utilizando frameworks frontend modernos (como React ou Vue.js) para proporcionar uma experiência mais rica aos usuários.
+
+- **CI/CD (Integração Contínua/Entrega Contínua):** Configurar um pipeline de CI/CD para automatizar o processo de build, teste e deploy da aplicação, garantindo entregas mais rápidas e confiáveis.
+
+- **Documentação da API:** Gerar uma documentação interativa da API (e.g., com Swagger/OpenAPI) para facilitar o consumo dos endpoints por outros desenvolvedores.
 
 ## <a name="c5"></a>5. Referências
 

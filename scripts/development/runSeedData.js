@@ -16,14 +16,12 @@ const pool = new Pool({
 
 const runSeedData = async () => {
   try {
-    // Primeiro, limpa os dados existentes (opcional)
     console.log("Limpando dados existentes...");
     await pool.query("TRUNCATE TABLE inscricoes RESTART IDENTITY CASCADE;");
     await pool.query("TRUNCATE TABLE eventos RESTART IDENTITY CASCADE;");
     await pool.query("TRUNCATE TABLE usuarios RESTART IDENTITY CASCADE;");
     console.log("Dados limpos com sucesso!");
 
-    // Executa o script de seed
     console.log("Inserindo dados fake...");
     const filePath = path.join(__dirname, "seed-data.sql");
     const sql = fs.readFileSync(filePath, "utf8");
@@ -31,7 +29,6 @@ const runSeedData = async () => {
     await pool.query(sql);
     console.log("Dados fake inseridos com sucesso!");
 
-    // Mostra um resumo dos dados inseridos
     const usersCount = await pool.query("SELECT COUNT(*) FROM usuarios");
     const eventsCount = await pool.query("SELECT COUNT(*) FROM eventos");
     const registrationsCount = await pool.query(
