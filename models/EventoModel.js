@@ -1,4 +1,53 @@
-// models/EventoModel.js
+const Joi = require("joi");
+
+const eventoSchema = Joi.object({
+  titulo: Joi.string().min(3).max(255).required().messages({
+    "string.base": "Título deve ser uma string.",
+    "string.empty": "Título não pode ser vazio.",
+    "string.min": "Título deve ter no mínimo {#limit} caracteres.",
+    "string.max": "Título deve ter no máximo {#limit} caracteres.",
+    "any.required": "Título é obrigatório.",
+  }),
+  descricao: Joi.string().allow("").max(1000).messages({
+    "string.base": "Descrição deve ser uma string.",
+    "string.max": "Descrição deve ter no máximo {#limit} caracteres.",
+  }),
+  imagem_url: Joi.string().uri().allow("").messages({
+    "string.base": "URL da imagem deve ser uma string.",
+    "string.uri": "URL da imagem deve ser uma URL válida.",
+  }),
+  criador_id: Joi.number().integer().positive().required().messages({
+    "number.base": "ID do criador deve ser um número.",
+    "number.integer": "ID do criador deve ser um número inteiro.",
+    "number.positive": "ID do criador deve ser um número positivo.",
+    "any.required": "ID do criador é obrigatório.",
+  }),
+});
+
+const eventoUpdateSchema = Joi.object({
+  titulo: Joi.string().min(3).max(255).messages({
+    "string.base": "Título deve ser uma string.",
+    "string.empty": "Título não pode ser vazio.",
+    "string.min": "Título deve ter no mínimo {#limit} caracteres.",
+    "string.max": "Título deve ter no máximo {#limit} caracteres.",
+  }),
+  descricao: Joi.string().allow("").max(1000).messages({
+    "string.base": "Descrição deve ser uma string.",
+    "string.max": "Descrição deve ter no máximo {#limit} caracteres.",
+  }),
+  imagem_url: Joi.string().uri().allow("").messages({
+    "string.base": "URL da imagem deve ser uma string.",
+    "string.uri": "URL da imagem deve ser uma URL válida.",
+  }),
+}).or("titulo", "descricao", "imagem_url");
+
+const idSchema = Joi.number().integer().positive().required().messages({
+  "number.base": "ID deve ser um número.",
+  "number.integer": "ID deve ser um número inteiro.",
+  "number.positive": "ID deve ser um número positivo.",
+  "any.required": "ID é obrigatório.",
+});
+
 const EventoRepository = require("../repositories/EventoRepository");
 const UsuarioRepository = require("../repositories/UsuarioRepository");
 
@@ -13,8 +62,14 @@ const EventoModel = {
 
   async criarEvento(titulo, descricao, imagem_url, criador_id) {
     try {
-      if (!titulo || !criador_id) {
-        throw new Error("Título e criador são obrigatórios");
+      const { error } = eventoSchema.validate({
+        titulo,
+        descricao,
+        imagem_url,
+        criador_id,
+      });
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       // Verificar se o criador existe
@@ -36,8 +91,9 @@ const EventoModel = {
 
   async buscarEventoPorId(id) {
     try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
+      const { error } = idSchema.validate(id);
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       return await EventoRepository.findById(id);
@@ -48,8 +104,18 @@ const EventoModel = {
 
   async editarEvento(id, titulo, descricao, imagem_url) {
     try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
+      const { error: idError } = idSchema.validate(id);
+      if (idError) {
+        throw new Error(idError.details[0].message);
+      }
+
+      const { error: updateError } = eventoUpdateSchema.validate({
+        titulo,
+        descricao,
+        imagem_url,
+      });
+      if (updateError) {
+        throw new Error(updateError.details[0].message);
       }
 
       // Verificar se o evento existe
@@ -66,8 +132,9 @@ const EventoModel = {
 
   async deletarEvento(id) {
     try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
+      const { error } = idSchema.validate(id);
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       // Verificar se o evento existe
@@ -89,8 +156,9 @@ const EventoModel = {
 
   async buscarInscricoesDoEvento(id) {
     try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
+      const { error } = idSchema.validate(id);
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       // Verificar se o evento existe
@@ -107,8 +175,9 @@ const EventoModel = {
 
   async dashboardEvento(id) {
     try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
+      const { error } = idSchema.validate(id);
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       // Buscar informações do evento
@@ -147,8 +216,9 @@ const EventoModel = {
 
   async buscarEventosPorCriador(criador_id) {
     try {
-      if (!criador_id || isNaN(criador_id)) {
-        throw new Error("ID do criador inválido");
+      const { error } = idSchema.validate(criador_id);
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       return await EventoRepository.findByCreatorId(criador_id);

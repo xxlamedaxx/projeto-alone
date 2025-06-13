@@ -97,9 +97,9 @@ POST http://localhost:3000/api/inscricoes
 Content-Type: application/json
 
 {
-  "usuario_id": 6,
+  "usuario_id": 30,
   "evento_id": 24,
-  "nome_participante": "Fulano da Silva",
+  "nome_participante": "Fulano da Lilva",
   "idade_participante": 22
 }
 
@@ -123,7 +123,7 @@ PUT http://localhost:3000/api/inscricoes/8
 Content-Type: application/json
 
 {
-  "usuario_id": 6,
+  "usuario_id": 8,
   "evento_id": 24,
   "nome_participante": "Doutor Silva",
   "idade_participante": 33

@@ -1,5 +1,61 @@
-// models/InscricaoModel.js
+const Joi = require("joi");
+
+const inscricaoSchema = Joi.object({
+  evento_id: Joi.number().integer().positive().required().messages({
+    "number.base": "ID do evento deve ser um número.",
+    "number.integer": "ID do evento deve ser um número inteiro.",
+    "number.positive": "ID do evento deve ser um número positivo.",
+    "any.required": "ID do evento é obrigatório.",
+  }),
+  usuario_id: Joi.number().integer().positive().required().messages({
+    "number.base": "ID do usuário deve ser um número.",
+    "number.integer": "ID do usuário deve ser um número inteiro.",
+    "number.positive": "ID do usuário deve ser um número positivo.",
+    "any.required": "ID do usuário é obrigatório.",
+  }),
+  nome_participante: Joi.string().min(3).max(100).required().messages({
+    "string.base": "Nome do participante deve ser uma string.",
+    "string.empty": "Nome do participante não pode ser vazio.",
+    "string.min":
+      "Nome do participante deve ter no mínimo {#limit} caracteres.",
+    "string.max":
+      "Nome do participante deve ter no máximo {#limit} caracteres.",
+    "any.required": "Nome do participante é obrigatório.",
+  }),
+  idade_participante: Joi.number().integer().positive().required().messages({
+    "number.base": "Idade do participante deve ser um número.",
+    "number.integer": "Idade do participante deve ser um número inteiro.",
+    "number.positive": "Idade do participante deve ser um número positivo.",
+    "any.required": "Idade do participante é obrigatória.",
+  }),
+});
+
+const inscricaoUpdateSchema = Joi.object({
+  nome_participante: Joi.string().min(3).max(100).messages({
+    "string.base": "Nome do participante deve ser uma string.",
+    "string.empty": "Nome do participante não pode ser vazio.",
+    "string.min":
+      "Nome do participante deve ter no mínimo {#limit} caracteres.",
+    "string.max":
+      "Nome do participante deve ter no máximo {#limit} caracteres.",
+  }),
+  idade_participante: Joi.number().integer().positive().messages({
+    "number.base": "Idade do participante deve ser um número.",
+    "number.integer": "Idade do participante deve ser um número inteiro.",
+    "number.positive": "Idade do participante deve ser um número positivo.",
+  }),
+}).or("nome_participante", "idade_participante");
+
+const idSchema = Joi.number().integer().positive().required().messages({
+  "number.base": "ID deve ser um número.",
+  "number.integer": "ID deve ser um número inteiro.",
+  "number.positive": "ID deve ser um número positivo.",
+  "any.required": "ID é obrigatório.",
+});
+
 const InscricaoRepository = require("../repositories/InscricaoRepository");
+const EventoRepository = require("../repositories/EventoRepository");
+const UsuarioRepository = require("../repositories/UsuarioRepository");
 
 const InscricaoModel = {
   async listarInscricoes() {
@@ -17,24 +73,26 @@ const InscricaoModel = {
     idade_participante
   ) {
     try {
-      // Validações básicas
-      if (!evento_id || isNaN(evento_id)) {
-        throw new Error("ID do evento inválido");
+      const { error } = inscricaoSchema.validate({
+        evento_id,
+        usuario_id,
+        nome_participante,
+        idade_participante,
+      });
+      if (error) {
+        throw new Error(error.details[0].message);
       }
-      if (!usuario_id || isNaN(usuario_id)) {
-        throw new Error("ID do usuário inválido");
+
+      // Verificar se o evento existe
+      const eventoExiste = await EventoRepository.exists(evento_id);
+      if (!eventoExiste) {
+        throw new Error("Evento não encontrado");
       }
-      if (!nome_participante || nome_participante.trim() === "") {
-        throw new Error("Nome do participante é obrigatório");
-      }
-      if (
-        !idade_participante ||
-        isNaN(idade_participante) ||
-        idade_participante <= 0
-      ) {
-        throw new Error(
-          "Idade do participante deve ser um número válido e maior que zero"
-        );
+
+      // Verificar se o usuário existe
+      const usuarioExiste = await UsuarioRepository.exists(usuario_id);
+      if (!usuarioExiste) {
+        throw new Error("Usuário não encontrado");
       }
 
       // Verificar se já existe inscrição do usuário para o evento
@@ -51,38 +109,45 @@ const InscricaoModel = {
         idade_participante
       );
     } catch (error) {
-      throw new Error(`Erro ao criar inscrição: ${error.message}`);
+      // Não envolver erros de validação Joi em uma mensagem genérica
+      if (error.message.includes("validation error")) {
+        throw error;
+      } else {
+        throw new Error(`Erro ao criar inscrição: ${error.message}`);
+      }
     }
   },
 
   async buscarInscricaoPorId(id) {
     try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
+      const { error } = idSchema.validate(id);
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       return await InscricaoRepository.findById(id);
     } catch (error) {
-      throw new Error(`Erro ao buscar inscrição: ${error.message}`);
+      if (error.message.includes("validation error")) {
+        throw error;
+      } else {
+        throw new Error(`Erro ao buscar inscrição: ${error.message}`);
+      }
     }
   },
 
   async editarInscricao(id, nome_participante, idade_participante) {
     try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
+      const { error: idError } = idSchema.validate(id);
+      if (idError) {
+        throw new Error(idError.details[0].message);
       }
-      if (!nome_participante || nome_participante.trim() === "") {
-        throw new Error("Nome do participante é obrigatório");
-      }
-      if (
-        !idade_participante ||
-        isNaN(idade_participante) ||
-        idade_participante <= 0
-      ) {
-        throw new Error(
-          "Idade do participante deve ser um número válido e maior que zero"
-        );
+
+      const { error: updateError } = inscricaoUpdateSchema.validate({
+        nome_participante,
+        idade_participante,
+      });
+      if (updateError) {
+        throw new Error(updateError.details[0].message);
       }
 
       // Verificar se a inscrição existe
@@ -97,14 +162,19 @@ const InscricaoModel = {
         idade_participante
       );
     } catch (error) {
-      throw new Error(`Erro ao editar inscrição: ${error.message}`);
+      if (error.message.includes("validation error")) {
+        throw error;
+      } else {
+        throw new Error(`Erro ao editar inscrição: ${error.message}`);
+      }
     }
   },
 
   async deletarInscricao(id) {
     try {
-      if (!id || isNaN(id)) {
-        throw new Error("ID inválido");
+      const { error } = idSchema.validate(id);
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       // Verificar se a inscrição existe
@@ -120,31 +190,49 @@ const InscricaoModel = {
 
       return true;
     } catch (error) {
-      throw new Error(`Erro ao deletar inscrição: ${error.message}`);
+      if (error.message.includes("validation error")) {
+        throw error;
+      } else {
+        throw new Error(`Erro ao deletar inscrição: ${error.message}`);
+      }
     }
   },
 
   async buscarInscricoesPorUsuario(usuario_id) {
     try {
-      if (!usuario_id || isNaN(usuario_id)) {
-        throw new Error("ID do usuário inválido");
+      const { error } = idSchema.validate(usuario_id);
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       return await InscricaoRepository.findByUsuario(usuario_id);
     } catch (error) {
-      throw new Error(`Erro ao buscar inscrições do usuário: ${error.message}`);
+      if (error.message.includes("validation error")) {
+        throw error;
+      } else {
+        throw new Error(
+          `Erro ao buscar inscrições do usuário: ${error.message}`
+        );
+      }
     }
   },
 
   async buscarInscricoesPorEvento(evento_id) {
     try {
-      if (!evento_id || isNaN(evento_id)) {
-        throw new Error("ID do evento inválido");
+      const { error } = idSchema.validate(evento_id);
+      if (error) {
+        throw new Error(error.details[0].message);
       }
 
       return await InscricaoRepository.findByEvento(evento_id);
     } catch (error) {
-      throw new Error(`Erro ao buscar inscrições do evento: ${error.message}`);
+      if (error.message.includes("validation error")) {
+        throw error;
+      } else {
+        throw new Error(
+          `Erro ao buscar inscrições do evento: ${error.message}`
+        );
+      }
     }
   },
 };

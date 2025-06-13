@@ -1,5 +1,3 @@
-// Arquivo para gerenciar todas as chamadas à API
-
 // URL base da API
 const API_BASE_URL = "http://localhost:3000/api";
 
@@ -103,6 +101,11 @@ const UsuariosAPI = {
 
       if (!response.ok) {
         throw new Error(`Erro ao excluir usuário: ${response.status}`);
+      }
+
+      // Se a resposta for 204 No Content, não há corpo para parsear
+      if (response.status === 204) {
+        return true; // Ou algum indicador de sucesso
       }
 
       return await response.json();
@@ -213,6 +216,11 @@ const EventosAPI = {
 
       if (!response.ok) {
         throw new Error(`Erro ao excluir evento: ${response.status}`);
+      }
+
+      // Se a resposta for 204 No Content, não há corpo para parsear
+      if (response.status === 204) {
+        return true; // Ou algum indicador de sucesso
       }
 
       return await response.json();
@@ -381,6 +389,11 @@ const InscricoesAPI = {
 
       if (!response.ok) {
         throw new Error(`Erro ao excluir inscrição: ${response.status}`);
+      }
+
+      // Se a resposta for 204 No Content, não há corpo para parsear
+      if (response.status === 204) {
+        return true; // Ou algum indicador de sucesso
       }
 
       return await response.json();
