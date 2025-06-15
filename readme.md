@@ -25,13 +25,13 @@ O projeto segue a arquitetura **MVC (Model-View-Controller)**, garantindo uma or
 - **config/** - Arquivos de configuração necessários para o funcionamento da aplicação.
 - **controllers/** - Define a lógica de negócio e interage com os modelos para responder às requisições dos usuários.
 - **documentos/** - Diretório para armazenar documentação do projeto.
-- **models/** - Representa as entidades e interações com o banco de dados.
+- **models/** - Apresenta verificações mais robustas.
 - **node_modules/** - Contém pacotes e dependências gerenciadas pelo npm.
+- **repositories** - Entra em contato com banco
 - **routes/** - Define os endpoints e gerencia o roteamento das requisições.
 - **scripts/** - Armazena scripts auxiliares e automações.
 - **services/** - Implementa regras de negócio e funcionalidades independentes dos controladores.
-- **tests/** - Contém arquivos de teste para validar a integridade do sistema.
-- **views/** - Responsável pela camada de apresentação, geralmente contendo arquivos HTML, EJS e CSS.
+- **views/** - Responsável pela camada de apresentação, geralmente contendo arquivos HTML, CSS e JS.
 
 ## Arquivos essenciais na raiz
 
@@ -90,8 +90,28 @@ npm start
 http://localhost:3000
 ```
 
-7- _Testes (opcional): Caso queira rodar testes, execute:_
+## Prints da Interface / GIFs Curtos
 
-```bash
-npm test
-```
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821157/Captura_inicio_evento_kcjvhz.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749822332/imagem_2025-06-13_104529708_mucb8z.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821156/Captura_dashboard_w4nq5r.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821156/Captura_dash2_i3xgyh.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821157/Captura_usuarios_wrydfw.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821156/Captura_iniusu_tw4nod.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821156/Captura_inscri_j999l6.png)
+![image](https://res.cloudinary.com/dtxiyeitw/image/upload/v1749821157/Captura_iniinscri_vqfirx.png)
+
+## Link para o Vídeo de Demonstração
+
+- [Espaço reservado para o link do vídeo de demonstração. Por favor, insira-o aqui.]
+
+## Tecnologias Utilizadas
+
+O `projeto-alone` foi desenvolvido utilizando as seguintes tecnologias:
+
+- **Node.js**: Ambiente de execução JavaScript server-side.
+- **Express.js**: Framework web para Node.js, utilizado para construir a API e as rotas da aplicação.
+- **PostgreSQL**: Sistema de gerenciamento de banco de dados relacional, utilizado para armazenar os dados da aplicação (via Supabase).
+- **HTML**: Linguagem de marcação para a estrutura das páginas web.
+- **CSS**: Linguagem de estilo para a apresentação visual das páginas.
+- **JavaScript**: Linguagem de programação principal, utilizada tanto no frontend quanto no backend.

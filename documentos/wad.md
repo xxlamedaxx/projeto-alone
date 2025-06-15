@@ -216,57 +216,12 @@ _Descreva e ilustre aqui o desenvolvimento do sistema web completo, explicando b
 
 ### 4.2 Conclusões e Trabalhos Futuros (Semana 8)
 
-## <a name="c6"></a>5. Decisões Técnicas
-
-Nesta seção, detalhamos as principais decisões técnicas que guiaram o desenvolvimento do projeto, abrangendo a escolha de frameworks, bibliotecas e padrões de arquitetura.
-
-- **Arquitetura MVC (Model-View-Controller):** Adoção da arquitetura MVC para promover a separação de responsabilidades, facilitando a organização do código, a manutenção e a escalabilidade do projeto. Os `models` lidam com a lógica de negócios e interação com o banco de dados, as `views` são responsáveis pela apresentação dos dados ao usuário, e os `controllers` gerenciam as requisições e orquestram a interação entre models e views.
-
-- **Node.js e Express.js:** Utilização do Node.js como ambiente de execução e Express.js como framework web. Essa escolha proporciona um ambiente de desenvolvimento JavaScript completo, desde o backend até o frontend (com EJS), permitindo a construção de aplicações web robustas e escaláveis.
-
-- **PostgreSQL como Banco de Dados:** O PostgreSQL foi selecionado devido à sua robustez, confiabilidade e capacidade de lidar com grandes volumes de dados. Sua conformidade com SQL e o suporte a recursos avançados garantem a integridade e a segurança das informações do sistema.
-
-- **Validação de Dados com Joi:** A biblioteca Joi foi integrada para realizar a validação de esquemas de dados nos `models`. Isso garante que os dados recebidos pela aplicação estejam em conformidade com as regras de negócio definidas, prevenindo erros e aumentando a segurança e a confiabilidade do sistema.
-
-- **Testes Unitários com Jest:** A implementação de testes unitários utilizando o Jest assegura a qualidade e a estabilidade do código. Os testes cobrem as funcionalidades dos `models`, garantindo que as validações e operações de banco de dados funcionem conforme o esperado, facilitando a detecção precoce de bugs e a refatoração segura.
-
----
-
-## <a name="c7"></a>6. Aprendizados e Desafios
-
-O desenvolvimento deste projeto proporcionou diversos aprendizados e desafios, que contribuíram significativamente para o aprimoramento das habilidades técnicas e de resolução de problemas.
-
-- **Aprendizados:**
-
-  - Aprofundamento na arquitetura MVC e sua aplicação prática em projetos Node.js.
-  - Melhor compreensão sobre a importância da validação de dados e como implementá-la de forma eficaz com Joi.
-  - Experiência na escrita de testes unitários robustos com Jest, cobrindo diferentes cenários e garantindo a qualidade do código.
-  - Gerenciamento de dependências e scripts de projeto com npm.
-  - Integração e manipulação de banco de dados PostgreSQL com Node.js.
-
-- **Desafios:**
-  - Configuração inicial do ambiente de desenvolvimento e integração das diferentes tecnologias (Node.js, Express, PostgreSQL, Joi, Jest).
-  - Implementação de validações complexas nos `models` para garantir a integridade dos dados, especialmente em cenários de criação e atualização.
-  - Escrita de testes unitários abrangentes que cobrissem todas as validações e lógicas de negócio, incluindo a simulação de interações com o banco de dados (mocks).
-  - Refatoração de código existente para incorporar as novas validações e testes, garantindo a compatibilidade e minimizando impactos.
-
----
-
-## <a name="c8"></a>7. Pontos de Melhoria
-
-Durante o desenvolvimento e após a conclusão das funcionalidades principais, foram identificados alguns pontos que poderiam ser aprimorados em futuras iterações do projeto:
-
-- **Autenticação e Autorização:** Implementar um sistema de autenticação e autorização mais robusto, utilizando tokens JWT (JSON Web Tokens) para proteger as rotas da API e controlar o acesso dos usuários com base em seus papéis (organizador, participante).
-
-- **Tratamento de Erros Global:** Centralizar o tratamento de erros na aplicação para fornecer respostas padronizadas e mais informativas aos clientes da API, melhorando a experiência do desenvolvedor e a depuração.
-
-- **Otimização de Queries de Banco de Dados:** Analisar e otimizar as queries SQL para melhorar o desempenho da aplicação, especialmente em cenários com grande volume de dados ou requisições complexas.
-
-- **Interface do Usuário (Frontend):** Aprimorar a interface do usuário com um design mais responsivo e interativo, utilizando frameworks frontend modernos (como React ou Vue.js) para proporcionar uma experiência mais rica aos usuários.
-
-- **CI/CD (Integração Contínua/Entrega Contínua):** Configurar um pipeline de CI/CD para automatizar o processo de build, teste e deploy da aplicação, garantindo entregas mais rápidas e confiáveis.
-
-- **Documentação da API:** Gerar uma documentação interativa da API (e.g., com Swagger/OpenAPI) para facilitar o consumo dos endpoints por outros desenvolvedores.
+Durante o desenvolvimento do projeto, enfrentei muitos desafios que contribuíram significativamente para meu crescimento técnico e pessoal. Aprender a programar já é uma tarefa complexa, e criar um sistema completo do zero, de forma individual, tornou tudo ainda mais desafiador — mas também recompensador. Por estar sozinho no processo, pude me aprofundar em todas as etapas do desenvolvimento, desde a criação do banco de dados até a configuração do servidor, passando pela implementação da arquitetura MVC e pelo uso de tecnologias como SQL, Express, Joi, HTML, CSS e JavaScript tanto no back-end quanto no front-end.
+Um dos maiores obstáculos foi compreender e aplicar corretamente o padrão MVC, especialmente na divisão entre Models, Controllers, Services, Repositories e Routes. No início, houve bastante confusão sobre o papel de cada parte, mas com estudo e prática, consegui entender como essa separação melhora a organização e a manutenção do código. Foi uma experiência valiosa, que me ensinou a importância da estrutura e da clareza em projetos maiores.
+A proposta do projeto foi criar uma nova forma de gerenciamento de inscrições, visando oferecer aos organizadores de eventos uma ferramenta mais eficiente e organizada. A aplicação resultante apresenta uma boa estrutura e funcionamento consistente, com validações seguras que, embora eficazes, ainda podem ser aprimoradas com mais tempo.
+Atualmente, o sistema está funcional e cumpre os objetivos iniciais. No entanto, existem diversas possibilidades de expansão. Entre os próximos passos, está a implementação de uma tela de cadastro mais completa, permitindo que os usuários criem seus próprios perfis. Isso viabilizará a distinção entre organizadores e participantes, com acessos e funcionalidades personalizadas para cada tipo de usuário.
+Além disso, planejo incluir funcionalidades mais robustas, como a venda de ingressos diretamente pela plataforma. A longo prazo, a ambição é criar uma solução capaz de competir com grandes players do setor, como a Blacktag, oferecendo uma alternativa mais acessível, com taxas menores e recursos avançados. Um exemplo já implementado é o dashboard, que fornece aos organizadores insights sobre seus eventos, como a média de idade do público e indicadores de desempenho.
+Com essas melhorias e inovações, acredito que o projeto tem potencial para se tornar uma referência no setor de eventos, unindo praticidade, autonomia e inteligência de dados para apoiar decisões estratégicas.
 
 ## <a name="c5"></a>5. Referências
 
