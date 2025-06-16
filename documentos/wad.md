@@ -211,8 +211,7 @@ A proposta da aplicação é atender **clientes organizadores de eventos**: ao f
 
 ### 4.1 Demonstração do Sistema Web (Semana 8)
 
-_VIDEO: Insira o link do vídeo demonstrativo nesta seção_
-_Descreva e ilustre aqui o desenvolvimento do sistema web completo, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar._
+https://youtu.be/hlNW5bW90mI
 
 ### 4.2 Conclusões e Trabalhos Futuros (Semana 8)
 

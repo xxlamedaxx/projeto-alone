@@ -103,7 +103,7 @@ http://localhost:3000
 
 ## Link para o Vídeo de Demonstração
 
-- [Espaço reservado para o link do vídeo de demonstração. Por favor, insira-o aqui.]
+https://youtu.be/hlNW5bW90mI
 
 ## Tecnologias Utilizadas
 
